@@ -1,12 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import excel from "../../../../public/excel.png";
 import Papa from "papaparse";
 import { MdOutlineFileUpload } from "react-icons/md";
 import Spinner from "@/components/spinner";
-import { IoIosArrowDown } from "react-icons/io";
 import RowData from "./RowData";
 
 export default function UploadData() {
@@ -14,6 +13,7 @@ export default function UploadData() {
   const [parsedData, setParsedData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState(false);
   const acceptableFileTypes =
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .csv";
 
@@ -31,12 +31,21 @@ export default function UploadData() {
       e.target.files[0].type !== ".csv" &&
       e.target.files[0].type !== "text/csv"
     ) {
-      alert("Please upload a valid file type");
+      removeFile();
+      setError(true);
       return;
     }
 
     setFile(e.target.files[0]);
   };
+
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  }, [error]);
 
   const handleUpload = () => {
     setLoading(true);
@@ -60,6 +69,11 @@ export default function UploadData() {
 
   return (
     <>
+      <div
+        className={`${error ? "flex" : "hidden"} absolute right-5 top-5 flex rounded bg-[rgb(250,0,51)] p-4 px-8 text-white transition-all`}
+      >
+        Please upload a CSV type file
+      </div>
       <div className="mx-auto flex h-[23rem] w-full flex-col gap-[1.3125rem] rounded-lg bg-[var(--primary-color)] p-4 md:w-[37.25rem]">
         <div className="flex h-full w-full flex-col items-center justify-center gap-4 rounded-lg border border-dashed">
           <input
