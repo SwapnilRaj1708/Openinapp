@@ -28,7 +28,8 @@ export default function UploadData() {
       e.target.files[0].type !==
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
       e.target.files[0].type !== "application/vnd.ms-excel" &&
-      e.target.files[0].type !== ".csv"
+      e.target.files[0].type !== ".csv" &&
+      e.target.files[0].type !== "text/csv"
     ) {
       alert("Please upload a valid file type");
       return;
